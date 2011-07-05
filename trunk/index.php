@@ -1,52 +1,118 @@
 <?php
-// print HTML start
-$home = "/var/www/html/minerwatch.strangl3r.com";
-$addr = "http://minerwatch.strangl3r.com";
-print "<html xmlns='http://www.w3.org/1999/xhtml'>
-<head>
-<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'> 
-<meta name='ROBOT' content='NOODP'>
-<meta http-equiv='refresh' content='30'>
-<title>MinerWatch</title>
+/*
+|---------------------------------------------------------------
+| PHP ERROR REPORTING LEVEL
+|---------------------------------------------------------------
+|
+| By default CI runs with error reporting set to ALL.  For security
+| reasons you are encouraged to change this when your site goes live.
+| For more info visit:  http://www.php.net/error_reporting
+|
+*/
+	error_reporting(E_ALL);
 
-    <!-- ** CSS ** --> 
-    <!-- base library --> 
-    <link rel='stylesheet' type='text/css' href='$addr/includes/grouptabs/ext-all.css' /> 
- 
-    <!-- overrides to base library --> 
-    <link rel='stylesheet' type='text/css' href='$addr/includes/grouptabs/Portal.css' /> 
-    <link rel='stylesheet' type='text/css' href='$addr/includes/grouptabs/GroupTab.css' /> 
- 
-    <!-- page specific --> 
-    <style type='text/css'> 
-        /* styles for iconCls */
-        .x-icon-tickets {
-            background-image: url('$addr/includes/grouptabs/images/tickets.png');
-        }
-        .x-icon-subscriptions {
-            background-image: url('$addr/includes/grouptabs/images/subscriptions.png');
-        }
-        .x-icon-users {
-            background-image: url('$addr/includes/grouptabs/images/group.png');
-        }
-        .x-icon-templates {
-            background-image: url('$addr/includes/grouptabs/images/templates.png');
-        }
-    </style> 
- 
-    <script type='text/javascript' src='$addr/includes/grouptabs/ext-base.js'></script> 
-    <script type='text/javascript' src='$addr/includes/grouptabs/ext-all.js'></script> 
-    <script type='text/javascript' src='$addr/includes/grouptabs/GroupTabPanel.js'></script> 
-    <script type='text/javascript' src='$addr/includes/grouptabs/GroupTab.js'></script> 
-    <script type='text/javascript' src='$addr/includes/grouptabs/Portal.js'></script> 
-    <script type='text/javascript' src='$addr/includes/grouptabs/PortalColumn.js'></script> 
-    <script type='text/javascript' src='$addr/includes/grouptabs/Portlet.js'></script> 
-    <script type='text/javascript' src='$addr/includes/grouptabs/examples.js'></script> 
-    <script type='text/javascript' src='$addr/includes/grouptabs/sample-grid.js'></script> 
-    <script type='text/javascript' src='$addr/includes/grouptabs/grouptabs.js'></script> 
-    <script type='text/javascript' src='$addr/includes/extjs/miframe.js'></script>
-    <script type='text/javascript' src='$addr/includes/extjs/Ext.ux.UUID.js'></script>
+/*
+|---------------------------------------------------------------
+| SYSTEM FOLDER NAME
+|---------------------------------------------------------------
+|
+| This variable must contain the name of your "system" folder.
+| Include the path if the folder is not in the same  directory
+| as this file.
+|
+| NO TRAILING SLASH!
+|
+*/
+	$system_folder = "system";
 
-</head>
-<body></body></html>";
-?>
+/*
+|---------------------------------------------------------------
+| APPLICATION FOLDER NAME
+|---------------------------------------------------------------
+|
+| If you want this front controller to use a different "application"
+| folder then the default one you can set its name here. The folder 
+| can also be renamed or relocated anywhere on your server.
+| For more info please see the user guide:
+| http://codeigniter.com/user_guide/general/managing_apps.html
+|
+|
+| NO TRAILING SLASH!
+|
+*/
+	$application_folder = "application";
+
+/*
+|===============================================================
+| END OF USER CONFIGURABLE SETTINGS
+|===============================================================
+*/
+
+
+/*
+|---------------------------------------------------------------
+| SET THE SERVER PATH
+|---------------------------------------------------------------
+|
+| Let's attempt to determine the full-server path to the "system"
+| folder in order to reduce the possibility of path problems.
+| Note: We only attempt this if the user hasn't specified a 
+| full server path.
+|
+*/
+if (strpos($system_folder, '/') === FALSE)
+{
+	if (function_exists('realpath') AND @realpath(dirname(__FILE__)) !== FALSE)
+	{
+		$system_folder = realpath(dirname(__FILE__)).'/'.$system_folder;
+	}
+}
+else
+{
+	// Swap directory separators to Unix style for consistency
+	$system_folder = str_replace("\\", "/", $system_folder); 
+}
+
+/*
+|---------------------------------------------------------------
+| DEFINE APPLICATION CONSTANTS
+|---------------------------------------------------------------
+|
+| EXT		- The file extension.  Typically ".php"
+| FCPATH	- The full server path to THIS file
+| SELF		- The name of THIS file (typically "index.php")
+| BASEPATH	- The full server path to the "system" folder
+| APPPATH	- The full server path to the "application" folder
+|
+*/
+define('EXT', '.'.pathinfo(__FILE__, PATHINFO_EXTENSION));
+define('FCPATH', __FILE__);
+define('SELF', pathinfo(__FILE__, PATHINFO_BASENAME));
+define('BASEPATH', $system_folder.'/');
+
+if (is_dir($application_folder))
+{
+	define('APPPATH', $application_folder.'/');
+}
+else
+{
+	if ($application_folder == '')
+	{
+		$application_folder = 'application';
+	}
+
+	define('APPPATH', BASEPATH.$application_folder.'/');
+}
+
+/*
+|---------------------------------------------------------------
+| LOAD THE FRONT CONTROLLER
+|---------------------------------------------------------------
+|
+| And away we go...
+|
+*/
+require_once BASEPATH.'codeigniter/CodeIgniter'.EXT;
+
+/* End of file index.php */
+/* Location: ./index.php */
