@@ -46,7 +46,7 @@ class Model_main extends Model
     $r3 = mt_rand();
     $salt = md5("$r0$r1$r2$r3");
 
-    $dbr = $this->load->database('write', TRUE);
+    $dbr = $this->load->database('main', TRUE);
     $sql0="INSERT INTO `dbbenchmark`.`data` (
 `id` ,
 `MYSQL_VERSION` ,
@@ -117,7 +117,7 @@ NOW())";
 
   function get_details($md5) {
     log_message('debug', "Starting get_details");
-    $dbr = $this->load->database('read', TRUE);
+    $dbr = $this->load->database('main', TRUE);
     $sql = "select * from data where md5='$md5' limit 1";
     log_message('debug', "$sql");
     qstart();

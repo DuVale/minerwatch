@@ -1,6 +1,6 @@
 <?php  
 if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-$active_group = "write";
+$active_group = "main";
 $active_record = TRUE;
 //
 // MySQL Database connections settings for select queries

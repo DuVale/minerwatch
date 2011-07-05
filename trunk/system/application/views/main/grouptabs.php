@@ -43,10 +43,89 @@ print "<html xmlns='http://www.w3.org/1999/xhtml'>
     <script type='text/javascript' src='$addr/includes/grouptabs/Portlet.js'></script> 
     <script type='text/javascript' src='$addr/includes/grouptabs/examples.js'></script> 
     <script type='text/javascript' src='$addr/includes/grouptabs/sample-grid.js'></script> 
-    <script type='text/javascript' src='$addr/includes/grouptabs/grouptabs.js'></script> 
     <script type='text/javascript' src='$addr/includes/extjs/miframe.js'></script>
     <script type='text/javascript' src='$addr/includes/extjs/Ext.ux.UUID.js'></script>
 
+<script type='text/javascript'>
+Ext.onReady(function() {
+	Ext.QuickTips.init();
+    
+    // create some portlet tools using built in Ext tool ids
+    var tools = [{
+        id:'gear',
+        handler: function(){
+            Ext.Msg.alert('Message', 'The Settings tool was clicked.');
+        }
+    },{
+        id:'close',
+        handler: function(e, target, panel){
+            panel.ownerCt.remove(panel, true);
+        }
+    }];
+
+    var commandpage = 'index.php/monitor';
+
+ 
+    var refreshTab=function(tab){
+	tab.getUpdater().refresh();
+    };
+
+    var viewport = new Ext.Viewport({
+        layout:'fit',
+        items:[{
+            xtype: 'grouptabpanel',
+    	    tabWidth: 130,
+    	    activeGroup: 0,
+    	    items: [
+		{
+		    expanded: true,
+		    items: [{
+			title: 'Mining Pools',
+			iconCls: 'x-icon-configuration',
+			tabTip: 'Configuration tabtip',
+			style: 'padding: 10px;',
+			layout: 'fit',
+			deferredRender: true,
+			listeners: {activate: refreshTab},
+			items: {
+			    xtype          : 'iframepanel',
+			    defaultSrc  : commandpage
+			}
+		    }, 
+			    {
+				title: 'Slush/BPM Pool',
+				iconCls: 'x-icon-templates',
+				tabTip: 'Templates tabtip',
+				style: 'padding: 10px;',
+				layout: 'fit',
+				deferredRender: true,
+				listeners: {activate: refreshTab},
+				items: {
+				    xtype          : 'iframepanel',
+				    defaultSrc  : commandpage
+				}
+			    },
+			    {
+				title: 'BTCguild Pool',
+				iconCls: 'x-icon-templates',
+				tabTip: 'Templates tabtip',
+				style: 'padding: 10px;',
+				html: Ext.example.shortBogusMarkup
+			    },
+			    {
+				title: 'DeepBit Pool',
+				iconCls: 'x-icon-templates',
+				tabTip: 'Templates tabtip',
+				style: 'padding: 10px;',
+				html: Ext.example.shortBogusMarkup
+			    },
+			    
+			   ]
+		}]
+	}]
+    });
+});
+</script>
 </head>
 <body></body></html>";
 ?>
