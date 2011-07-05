@@ -11,10 +11,11 @@ class Main extends Controller {
     log_message('debug', "main_controller_index function called");
     $g['root'] = $this->config->item('base_url');
     $_SESSION['example'] = $g['root'];	  // we set this for the header files that don't use CI sessions
-    $this->load->view('main/devicesJ',$g);
+    #$this->load->view('main/devicesJ',$g);
+    $this->load->view('main/grouptabs',$g);
   }
   
-  function show() {
+  function monitor() {
     $this->load->model('Model_main', 'main');
     $md5 = ($this->uri->segment(3))?$this->uri->segment(3):0;
     $g['data'] = $this->main->get_details($md5);
