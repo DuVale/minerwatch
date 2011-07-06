@@ -102,6 +102,7 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `slush_pool_results` (
   `id` int(11) NOT NULL auto_increment,
+  `active` tinyint(4) NOT NULL default '0',
   `user_id` int(11) NOT NULL default '0',
   `username` varchar(255) NOT NULL,
   `api_key` varchar(255) NOT NULL,
@@ -131,6 +132,7 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `slush_pool_results_archive` (
   `id` int(11) NOT NULL auto_increment,
+  `active` tinyint(4) NOT NULL default '0',
   `user_id` int(11) NOT NULL default '0',
   `username` varchar(255) NOT NULL,
   `api_key` varchar(255) NOT NULL,

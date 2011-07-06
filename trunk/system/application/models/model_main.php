@@ -15,90 +15,15 @@ class Model_main extends Model
     parent::Model();
   }
   
-  function enterstate($MYSQL_VERSION,$MYSQL_INNODB_BUFFER_POOL_SIZE,$MYSQL_SYNC_BINLOG,$MYSQL_TX_ISOLATION,$CPU_MODEL,$CPU_SPEED,$CPU_QUANT,$MEMORY_TOTAL_BYTES,$MEMORY_FREE_BYTES,$MEMORY_CACHED_BYTES,$MEMORY_ACTIVE_BYTES,$SWAP_TOTAL_BYTES,$SWAP_FREE_BYTES,$SYSTEM_OS,$SYSTEM_KERNEL,$SYSTEM_ARCH,$INSERT_OLTP_YES,$INSERT_OLTP_NO,$SELECT_INDEX_YES_SEQ,$SELECT_INDEX_YES_RAND,$SELECT_INDEX_NO_SEQ,$SELECT_INDEX_NO_RAND) {
-    
+  function enterstate() {    
     $MYSQL_VERSION = $this->db->escape_str($MYSQL_VERSION);
-    $MYSQL_INNODB_BUFFER_POOL_SIZE = $this->db->escape_str($MYSQL_INNODB_BUFFER_POOL_SIZE);
-    $MYSQL_SYNC_BINLOG = $this->db->escape_str($MYSQL_SYNC_BINLOG);
-    $MYSQL_TX_ISOLATION = $this->db->escape_str($MYSQL_TX_ISOLATION);
-    $CPU_MODEL = $this->db->escape_str($CPU_MODEL);
-    $CPU_SPEED = $this->db->escape_str($CPU_SPEED);
-    $CPU_QUANT = $this->db->escape_str($CPU_QUANT);
-    $MEMORY_TOTAL_BYTES = $this->db->escape_str($MEMORY_TOTAL_BYTES);
-    $MEMORY_FREE_BYTES = $this->db->escape_str($MEMORY_FREE_BYTES);
-    $MEMORY_CACHED_BYTES = $this->db->escape_str($MEMORY_CACHED_BYTES);
-    $MEMORY_ACTIVE_BYTES = $this->db->escape_str($MEMORY_ACTIVE_BYTES);
-    $SWAP_TOTAL_BYTES = $this->db->escape_str($SWAP_TOTAL_BYTES);
-    $SWAP_FREE_BYTES = $this->db->escape_str($SWAP_FREE_BYTES);
-    $SYSTEM_OS = $this->db->escape_str($SYSTEM_OS);
-    $SYSTEM_KERNEL = $this->db->escape_str($SYSTEM_KERNEL);
-    $SYSTEM_ARCH = $this->db->escape_str($SYSTEM_ARCH);
-    $INSERT_OLTP_YES = $this->db->escape_str($INSERT_OLTP_YES);
-    $INSERT_OLTP_NO = $this->db->escape_str($INSERT_OLTP_NO);
-    $SELECT_INDEX_YES_SEQ = $this->db->escape_str($SELECT_INDEX_YES_SEQ);
-    $SELECT_INDEX_YES_RAND = $this->db->escape_str($SELECT_INDEX_YES_RAND);
-    $SELECT_INDEX_NO_SEQ = $this->db->escape_str($SELECT_INDEX_NO_SEQ);
-    $SELECT_INDEX_NO_RAND = $this->db->escape_str($SELECT_INDEX_NO_RAND);
-    
-    $r0 = mt_rand();
-    $r1 = mt_rand();
-    $r2 = mt_rand();
-    $r3 = mt_rand();
-    $salt = md5("$r0$r1$r2$r3");
-
     $dbr = $this->load->database('main', TRUE);
     $sql0="INSERT INTO `dbbenchmark`.`data` (
 `id` ,
-`MYSQL_VERSION` ,
-`MYSQL_INNODB_BUFFER_POOL_SIZE` ,
-`MYSQL_SYNC_BINLOG` ,
-`MYSQL_TX_ISOLATION` ,
-`CPU_MODEL` ,
-`CPU_SPEED`,
-`CPU_QUANT` ,
-`MEMORY_TOTAL_BYTES` ,
-`MEMORY_FREE_BYTES` ,
-`MEMORY_CACHED_BYTES` ,
-`MEMORY_ACTIVE_BYTES` ,
-`SWAP_TOTAL_BYTES` ,
-`SWAP_FREE_BYTES` ,
-`SYSTEM_OS` ,
-`SYSTEM_KERNEL` ,
-`SYSTEM_ARCH` ,
-`INSERT_OLTP_YES` ,
-`INSERT_OLTP_NO` ,
-`SELECT_INDEX_YES_SEQ` ,
-`SELECT_INDEX_YES_RAND` ,
-`SELECT_INDEX_NO_SEQ` ,
-`SELECT_INDEX_NO_RAND`,
-`md5`,
 `creation_time`
 )
 VALUES (
 NULL,
-'$MYSQL_VERSION',
-'$MYSQL_INNODB_BUFFER_POOL_SIZE',
-'$MYSQL_SYNC_BINLOG',
-'$MYSQL_TX_ISOLATION',
-'$CPU_MODEL',
-'$CPU_SPEED',
-'$CPU_QUANT',
-'$MEMORY_TOTAL_BYTES',
-'$MEMORY_FREE_BYTES',
-'$MEMORY_CACHED_BYTES',
-'$MEMORY_ACTIVE_BYTES',
-'$SWAP_TOTAL_BYTES',
-'$SWAP_FREE_BYTES',
-'$SYSTEM_OS',
-'$SYSTEM_KERNEL',
-'$SYSTEM_ARCH',
-'$INSERT_OLTP_YES',
-'$INSERT_OLTP_NO',
-'$SELECT_INDEX_YES_SEQ',
-'$SELECT_INDEX_YES_RAND',
-'$SELECT_INDEX_NO_SEQ',
-'$SELECT_INDEX_NO_RAND',
-MD5('$salt'),
 NOW())";
     $this->db->trans_start();
     log_message('debug', "Transaction: $sql0");
@@ -115,20 +40,56 @@ NOW())";
     }
   }
 
-  function get_details($md5) {
-    log_message('debug', "Starting get_details");
+  function get_data() {
+    log_message('debug', "Starting get_data");
     $dbr = $this->load->database('main', TRUE);
-    $sql = "select * from data where md5='$md5' limit 1";
+    $sql = "select * from api_keys";
     log_message('debug', "$sql");
-    qstart();
-    $query = $dbr->query($sql);
-    qend();
+    $data = array();
+    $query = $dbr->query($sql);    
     if($query->num_rows() > 0) {
-      return $query->result_array();
+      foreach ($query->result() as $row) {
+	$a = $row->api_key;;
+	$sql1 = "select * from slush_pool_results where active='0' and api_key='$a' order by worker_name";
+	log_message('debug', "$sql1");
+	$query1 = $dbr->query($sql1);
+	if($query1->num_rows() > 0) {
+	  foreach ($query1->result() as $row1) {
+	    $api_key = $row1->api_key;
+	    $worker_name = $row1->worker_name;
+
+	    $sql2 = "select * from slush_pool_results where active='0' and api_key='$a' order by worker_name";
+	    log_message('debug', "$sql2");
+	    $query2 = $dbr->query($sql2);
+	    if($query2->num_rows() > 0) {
+	      foreach ($query2->result() as $row2) {
+		$unconfirmed_reward = $row2->unconfirmed_reward;
+		$confirmed_reward = $row2->confirmed_reward;
+		$worker_name = $row2->worker_name;
+		$last_share = $row2->last_share;
+		$score = $row2->score;
+		$alive = $row2->alive;
+		$shares = $row2->shares;
+		$hashrate = $row2->hashrate;
+		$creation_time = $row2->creation_time;
+		$z = array("worker_name" => $worker_name,
+			   "unconfirmed_reward" => $unconfirmed_reward,
+			   "confirmed_reward" => $confirmed_reward,
+			   "last_share" => $last_share,
+			   "score" => $score,
+			   "alive" => $alive,
+			   "shares" => $shares,
+			   "hashrate" => $hashrate,
+			   "creation_time" => $creation_time);
+		  array_push($data,$z);
+	      }
+	    }
+	  }
+	}
+      }
     }
-    else {
-      return 0;
-    }
+    return $data;
   }
 }
+
 ?>

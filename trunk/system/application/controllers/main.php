@@ -9,25 +9,23 @@ class Main extends Controller {
 
   function index() {	  
     log_message('debug', "main_controller_index function called");
+    $this->load->model('Model_main', 'main');
     $g['root'] = $this->config->item('base_url');
-    $_SESSION['example'] = $g['root'];	  // we set this for the header files that don't use CI sessions
-    #$this->load->view('main/devicesJ',$g);
+    #$_SESSION['example'] = $g['root'];	  // we set this for the header files that don't use CI sessions
     $this->load->view('main/grouptabs',$g);
   }
-  
-  function monitor() {
-    $this->load->model('Model_main', 'main');
-    $md5 = ($this->uri->segment(3))?$this->uri->segment(3):0;
-    $g['data'] = $this->main->get_details($md5);
-    $g['root'] = $this->config->item('base_url');
-    if($g['data'] == 0) {
-      show_error("The ID you requested has failed. You are probably requesting it incorrectly.");
-    }
-    else {
-      $this->load->view('main/details',$g);
-    }
-  }
 
+  function monitor_slush() {      
+    log_message('debug', "main_controller_monitor_slush function called");
+    $this->load->model('Model_main', 'main');
+    $g['data'] = $this->main->get_data();
+    $g['root'] = $this->config->item('base_url');
+    $g['home'] = $this->config->item('base_dir');
+    #$_SESSION['example'] = $g['root'];    // we set this for the header files that don't use CI sessions
+    #$this->load->view('main/devicesJ',$g);
+    $this->load->view('main/slush',$g);
+  }
+  
 }
 
 ?>
