@@ -1,7 +1,7 @@
 <?php
 // print HTML start
-$home = "/var/www/html/staging.minerwatch.strangl3r.com";
-$addr = "http://staging.minerwatch.strangl3r.com";
+$addr = substr_replace($root,"",-1);
+
 print "<html xmlns='http://www.w3.org/1999/xhtml'>
 <head>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'> 
@@ -63,9 +63,7 @@ Ext.onReady(function() {
         }
     }];
 
-    var commandpage = 'index.php/monitor';
-
- 
+    var commandpage = 'index.php/main/monitor_slush';
     var refreshTab=function(tab){
 	tab.getUpdater().refresh();
     };
