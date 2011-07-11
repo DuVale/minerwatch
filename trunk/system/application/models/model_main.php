@@ -29,25 +29,27 @@ class Model_main extends Model
         log_message('debug', "$sql1");
         $query1 = $dbr->query($sql1);
         if($query1->num_rows() > 0) {
-	  $unconfirmed_reward = $row1->unconfirmed_reward;
-	  $confirmed_reward = $row1->confirmed_reward;
-	  $worker_name = $row1->worker_name;
-	  $last_share = $row1->last_share;
-	  $score = $row1->score;
-	  $alive = $row1->alive;
-	  $shares = $row1->shares;
-	  $hashrate = $row1->hashrate;
-	  $creation_time = $row1->creation_time;
-	  $z = array("worker_name" => $worker_name,
-		     "unconfirmed_reward" => $unconfirmed_reward,
-		     "confirmed_reward" => $confirmed_reward,
-		     "last_share" => $last_share,
-		     "score" => $score,
-		     "alive" => $alive,
-		     "shares" => $shares,
-		     "hashrate" => $hashrate,
-		     "creation_time" => $creation_time);
-	  array_push($data,$z);	  
+	  foreach ($query1->result() as $row1) {
+	    $unconfirmed_reward = $row1->unconfirmed_reward;
+	    $confirmed_reward = $row1->confirmed_reward;
+	    $worker_name = $row1->worker_name;
+	    $last_share = $row1->last_share;
+	    $score = $row1->score;
+	    $alive = $row1->alive;
+	    $shares = $row1->shares;
+	    $hashrate = $row1->hashrate;
+	    $creation_time = $row1->creation_time;
+	    $z = array("worker_name" => $worker_name,
+		       "unconfirmed_reward" => $unconfirmed_reward,
+		       "confirmed_reward" => $confirmed_reward,
+		       "last_share" => $last_share,
+		       "score" => $score,
+		       "alive" => $alive,
+		       "shares" => $shares,
+		       "hashrate" => $hashrate,
+		       "creation_time" => $creation_time);
+	    array_push($data,$z);	  
+	  }
 	}
       }
     }
